@@ -1,0 +1,780 @@
+---
+title: "Areas beneath the relative operating characteristics (ROC) and relative operating levels (ROL) curves: Statistical significance and interpretation"
+author: "By S. J. MASON and N. E. GRAHAM   
+source: <http://doi.wiley.com/10.1256/003590002320603584>"
+date: "Paper Review + code Demo. Group Meeting - Dec 14th, 2017"
+header-includes:
+   \usepackage{bbm}
+    \usepackage{amsmath}
+    \usepackage{algorithm}
+    \usepackage[noend]{algpseudocode}
+    \usepackage[]{algorithmic}
+    
+output: 
+  ioslides_presentation: 
+    highlight: espresso
+    keep_md: yes
+    smaller: yes
+    transition: faster
+    widescreen: yes
+---
+<style>
+.column-left13{
+  float: left;
+  width: 33%;
+  text-align: left;
+}
+.column-right23{
+  float: left;
+  width: 66%;
+  text-align: left;
+}
+.column-left{
+  float: left;
+  width: 33%;
+  text-align: left;
+}
+.column-center{
+  display: inline-block;
+  width: 33%;
+  text-align: center;
+}
+.column-right{
+  float: right;
+  width: 33%;
+  text-align: right;
+}
+</style>
+
+## Methodologies
+<h1>Receiver operating characteristic (ROC)</h1>
+- Originally developed in the field of radar signal-detection theory to characterize the quality of a forecast system  (Peterson and Birdsall 1953)
+
+- Used extensively in the fields of psychological and medical test evaluation (eGreen and Swets 1966; Swets 1973; Egan 1975; Metz 1978)
+
+- Ability to anticipate correctly the occurrence or non-occurrence of pre-defined events
+
+<h1>Relative operating levels (ROL)</h1>
+- The 'intensity' of the events varies across a continuous scale
+
+<h1>Interpretations:</h1>
+<h1>ROC Area:</h1>
+- Probability that the forecast probability assigned to the event is higher than to the non-event. 
+
+<h1>ROL Area:</h1>
+- Probability that the outcome is more intense when a warning has been issued than when not.
+
+## Probabilitic forecast systems and the ROC curve 
+* forecasts (a sequence of warnings or non-warnings) 
+* observations (a sequence of events or non-events) 
+
+<div class="columns-2">
+  <div align="top">
+  <img src="figs/Fig1.png" width=400>
+  </div>
+  <div align="top">
+  <img src="figs/Fig2.png" width=400>
+  </div>
+</div>
+
+source: Fawcett, T. (2006). An introduction to ROC analysis. <http://doi.org/10.1016/j.patrec.2005.10.010>
+
+## Continuous forecast probabilities (no ties):
+  <!-- $$ e = \text{n of pre-defined events}   $$ -->
+  <!-- $$ e^{\prime} =  \text{n of non-events}   $$ -->
+  <!-- $$  f = \text{ n of non-events with higher Pr than the current hit}   $$ -->
+  <!-- $$ \text{area gained} = \frac{(e^{\prime}-f)}{ee^{\prime}}   $$ -->
+  <!-- $$   A = \frac{1}{ee^{\prime}} \sum_{i=1}^{e}(e^{\prime}-f_i) $$ -->
+<div class="columns-2">
+  <div align="top">
+  * two-component vector: Hit rate, False-alarm rate
+  * 'hit rate': event fraction for which a warning was correctly issued
+  
+  <img src="figs/Fig3.png" width=600>
+  </div>
+  <div align="right">
+  <img src="figs/Fig4.png" width=400>
+  </div>
+</div>
+
+## Discrete forecast probabilities (ties allowed):
+<div class="columns-2">
+<div align="top">
+  <img src="figs/FIG9.png" width=450>
+  </div>
+  <div align="right">
+  <img src="figs/FIG10.png" width=475>
+  </div>
+</div>
+
+## Sorting (inversions) and ROC Area
+<!--  $$ F =  \sum_{i=1}^{e} f_i = \sum_{i=1}^{e} r_i -  \frac{e(e+1)}{2}   $$ -->
+<!-- where: -->
+<!--  $$ f_i  =  \text{false alarm with higher Prob than each hit}   $$ -->
+<!--  $$ r _i = \text{rank of the forecasts corresponding to each hit} $$ -->
+<div class="columns-2">
+  <div align="left">
+  <img src="figs/Fig5prev.png" width=500>
+  </div>
+  <div align="right">
+  <img src="figs/fig5.png" width=350>
+  </div>
+</div>
+
+
+## Distribution of inversions
+* Mann-Whitney U-test for differences in the central tendencies of two independent samples (Conover 1999)
+* Given two samples sized n1 and n2, the Mann-Whitney U-statistic is:
+<!-- U = \sum_{i=1}^{n_1}r_{1i} - \frac{n_1(n_1+1)}{2} -->
+<img src="figs/Fig6.png" width=500>
+  
+
+## Normal Approximation of the ROC Area
+* For large sample sizes $(e \gt 30)$:
+
+<img src="figs/Fig7.png" width=250>
+
+* Resultant errors in significance levels from the normality assumption:
+<img src="figs/Fig8.png" width=700>
+
+## An example (N=15)
+<div class="columns-2">
+<div align="top">
+  <img src="figs/fig12.png" width=450>
+  </div>
+  <div align="right">
+  <img src="figs/fig11.png" width=475>
+  </div>
+</div>
+* The ROC area = 0.875, has a p-value of 0.007549 
+* The skill of the model is significantly high at a confidence level of greater than 99% (p<0.01)
+
+
+## Significance Tests for comparing two or more ROC areas:
+<h1>Parametric:</h1> 
+* t-test and $\chi^2 tests$
+
+<h1>Non-Parametric:</h1> 
+* Delong et al. (1988)
+* Bootstrap: involves repeatedly computing the ROC curve from resamples (or a part of it).
+
+<h1>Implementation used in Demo:</h1>
+* <h1>pROC R package:</h1> Xavier Robin, Natacha Turck, et al. (2011). "pROC: an open-source package for R and S+ to analyze and compare ROC curves". BMC Bioinformatics, 12, p. 77. 
+
+DOI: <https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-77> 
+
+## Delong method
+<img src="figs/fig13.png" width=600>
+
+* This test statistic usually follows a normal distribution asymptotically (i.e., for large samples)
+* Paired design: all diagnostic tests are applied to the same set of patients. Accuracy measures for any tests will be correlated, resulting in a nonzero value for the Cov.
+
+
+## Data and labels:
+```{r}
+# UCI -Breast Cancer Wisconsin (Diagnostic) Data Set
+# Instances: 569
+# Attributes: 30 plus the id attribute
+# Ten real-valued features are computed for cell-nuclei: 
+# -----------------------------------------
+# 1) radius (mean of distances from center to points on the perimeter) 
+# 2) texture (standard deviation of gray-scale values) 
+# 3) perimeter 
+# 4) area 
+# 5) smoothness (local variation in radius lengths) 
+# 6) compactness (perimeter^2 / area - 1.0) 
+# 7) concavity (severity of concave portions of the contour) 
+# 8) concave points (number of concave portions of the contour) 
+# 9) symmetry 
+# 10) fractal dimension ("coastline approximation" - 1)
+# Mean, standard error(SE) and "worst" (mean of the three largest values) 
+# were computed for each image, resulting in 30 features
+# -----------------------------------------
+# Dependent variable (Diagnosis): (0 for benign, 1 for malignant)
+# Classes: Benign: 357 (62.7%)  -  Malignant: 212 (37.3%)
+
+```
+source: <https://www.kaggle.com/uciml/breast-cancer-wisconsin-data/data>
+
+
+## Train a Neural Network (MLP) classifier
+```{r echo=TRUE, eval=FALSE, warning=FALSE}
+# Create Split (any column is fine)
+split = sample.split(data$diagnosis, SplitRatio = 0.70)
+
+# Split based off of split Boolean Vector
+train = subset(data, split == TRUE)
+test = subset(data, split == FALSE)
+
+library(neuralnet)
+nn <- neuralnet(diagnosis ~ radius_mean + texture_mean + perimeter_mean + area_mean + 
+        smoothness_mean + compactness_mean + concavity_mean + concave.points_mean + 
+        symmetry_mean + fractal_dimension_mean + radius_se + texture_se + 
+        perimeter_se + area_se + smoothness_se + compactness_se + 
+        concavity_se + concave.points_se + symmetry_se + fractal_dimension_se + 
+        radius_worst + texture_worst + perimeter_worst + area_worst + 
+        smoothness_worst + compactness_worst + concavity_worst + 
+        concave.points_worst + symmetry_worst + fractal_dimension_worst,
+    train,hidden=c(10),linear.output=FALSE)
+
+# Compute Predictions off Test Set
+train.nn.values <- compute(nn,train[-c(ncol(test))])
+test.nn.values <- compute(nn,test[-c(ncol(test))])
+
+```
+
+```{r include=FALSE, warning=FALSE}
+# data.csv from https://www.kaggle.com/uciml/breast-cancer-wisconsin-data/data
+#load dataset
+setwd("Z:/Cristina/PhD-files/presentations/paper-review_ROC_ROL") # 
+dataset = read.csv("input/data.csv")
+data <- dataset[-1]					# STRIP PATIENT IDs
+diagnosis <- data[,1]					# GET THE DEPENDENT VARIABLE: THE DIAGNOSIS
+characteristics <- data[,2:ncol(data)] #
+characteristics <- characteristics[-c(ncol(characteristics))] # Strip last column
+
+X <- characteristics
+Y <- ifelse(diagnosis=="B",0,1)
+
+library(MASS)
+library(klaR)
+library(caret)
+library(rpart)
+library(rpart.plot)
+require(ggplot2)
+library(pROC)
+library(adabag)
+
+################ 
+## Calculate and plot an ROC with CI and optimal threshold
+################ 
+calcAUC_plot <- function(obs, probpred, xptext, yptext, icolors, printauc, atitle){
+  library(pROC)
+  ROC <- plot.roc(obs, 
+                  probpred,
+                  ci=TRUE, print.auc=printauc, print.auc.x=xptext, print.auc.y=yptext,
+                  col=icolors, lty=1, legacy.axes=TRUE,
+                  main=atitle)
+  # determine best operating point (maximizes both Se Spe)
+  # ?best?: the threshold with the highest sum sensitivity + specificity is plotted (this might be more than one threshold).
+  best_thr=ci(ROC, of="thresholds", thresholds="best")
+  plot(best_thr, col=icolors) # add one threshold
+  #print(ROC$auc)
+  #print(best_thr)
+  output <- list(ROC=ROC, auc=ROC$auc, best_thr=best_thr)
+  return(output)
+}
+
+# TRAIN A NEURAL NETWORK (MLP) CLASSIFIER
+##It is important to normalize data before training a neural network on it
+# Create Vector of Column Max and Min Values
+maxs <- apply(X, 2, max)
+mins <- apply(X, 2, min)
+
+# Use scale() and convert the resulting matrix to a data frame
+Xscaled <- as.data.frame(scale(X, center = mins, scale = maxs - mins))
+data = cbind(Xscaled,diagnosis=Y)
+
+library(caTools)
+set.seed(101)
+# Create Split (any column is fine)
+split = sample.split(data$diagnosis, SplitRatio = 0.70)
+
+# Split based off of split Boolean Vector
+train = subset(data, split == TRUE)
+test = subset(data, split == FALSE)
+
+# CREATE FORMULA
+feats <- names(Xscaled)
+# Concatenate strings
+f <- paste(feats,collapse=' + ')
+f <- paste('diagnosis ~',f)
+# Convert to formula
+f <- as.formula(f)
+
+#install.packages('neuralnet')
+library(neuralnet)
+nn <- neuralnet(f,train,hidden=c(10),linear.output=FALSE)
+
+# Compute Predictions off Test Set
+train.nn.values <- compute(nn,train[-c(ncol(test))])
+test.nn.values <- compute(nn,test[-c(ncol(test))])
+
+# Check out net.result
+print(head(test.nn.values$net.result))
+
+# have results between 0 and 1 that are more like probabilities of belonging to each class. We'll use sapply() to round these off to either 0 or 1 class so we can evaluate them against the test labels.
+train.nn.values$round.result <- sapply(train.nn.values$net.result,round,digits=0)
+test.nn.values$round.result <- sapply(test.nn.values$net.result,round,digits=0)
+
+## Now let's create a simple confusion matrix:
+table(train$diagnosis,train.nn.values$round.result)
+  #     0   1
+  # 0 250   0
+  # 1   2 146
+table(test$diagnosis,test.nn.values$round.result)
+  #     0   1
+  # 0  107   0
+  # 1   4  60
+```
+
+## ROC curve
+<div class="column-left13">
+```{r eval=TRUE, echo=FALSE, fig.width=3, fig.height=3, warning=FALSE}
+# We can visualize the Neural Network by using the plot(nn) 
+# plot ROC curve
+n=12
+colors = rainbow(n, s = 1, v = 1, start = 0, end = max(1, n - 1)/n, alpha = 1)
+# plot
+Tr = calcAUC_plot(train$diagnosis, train.nn.values$net.result,
+                           xptext=0.45, yptext=0.65 ,colors[1],  FALSE, "")
+par(new=TRUE)
+Te = calcAUC_plot(test$diagnosis, test.nn.values$net.result,
+                           xptext=0.65, yptext=0.45 ,colors[6], FALSE, atitle="ROC curve")
+legend("bottomright",
+       legend = c(paste0("train"),
+                  paste0("test")),
+       col = c(colors[1],colors[6]), lwd = 2)
+```
+</div>
+<div class="column-right23">
+```{r}
+#  compare the two ROC curves (DeLong) based on U-statistics theory 
+Tr$auc
+Te$auc
+roc.test(Tr$ROC,Te$ROC,method="delong",alternative="two.sided")
+```
+</div>
+
+
+```{r echo=FALSE, eval=TRUE, warning=FALSE}
+setwd("Z:/Cristina/PhD-files/presentations/paper-review_ROC_ROL") # 
+load("traditionalCADperf_gsplits.RData")
+source('functionsCAD.R', encoding = 'UTF-8')
+```
+
+## Real dataset: Clinical MRI nonmass findings
+```{r echo=TRUE, eval=TRUE, warning=FALSE}
+# print summary of lesions in dataset:
+summary(allfeatures$labels)
+
+## Types and # of conventional CAD features:
+# 34 Dynamic, 19 morphological, 44 texture, 20 dispersion, 80 single-enhancement
+# --- 
+# 197 Total conventional CAD features
+
+# split in 90%/10% train/test:
+sep = round(nrow(allfeatures)*0.10)
+X_test = onlylab[1:sep,]
+y_test = X_test$labels
+init_indTrain = sep+1
+X_train = onlylab[init_indTrain:nrow(onlylab),]
+y_train = X_train$labels
+
+```
+
+## Train ensembles of "bagging" classification binary trees:
+```pseudo
+Define sets of model parameter values to evaluate: Depth, and number of Trees
+Hold-out an independent test sample (Test set)
+With the remainder samples define resampling: Stratified kfold cross-validation
+for each parameter set do:
+  for each resampling iteration do:
+    Feature selection in nth-kth folds (Train set)
+    Train classifier in nth-kth folds 
+    Predict probabilities in kth fold (Validation set)
+  end
+  Calculate average performance across Train and Validation sets
+end
+Determine the optimal parameter set
+Fit the final model to all samples used using the optimal parameter set
+Calculate performance and generalization in the held-out independent set
+```
+
+## Ensembles performance:
+```{r echo=TRUE}
+print(grdperf)
+
+```
+
+## Ensembles performance surface plots:
+```{r echo=FALSE, eval=TRUE, warning=FALSE, fig.width=10}
+################
+# plot learning surface of ensemble parameters
+grdperf_toplot = grdperf[c(3,5,1,2)]
+surface_forestperfm(grdperf_toplot, 2, "D", "ntrees")
+
+```
+
+## Ensembles of trees ROC
+```{r eval=TRUE, echo=FALSE, fig.width=10, fig.height=3.3, warning=FALSE}
+# Create 5 objects: Tr_RF, ciobj_Tr_RF, val_RF, ciobj_val_RF, Te_RF
+# plot ROC curve
+################
+library(pROC)
+par(mfrow = c(1, 3))
+par(cex = 0.6)
+par(mar = c(3, 3, 0, 0), oma = c(0.51, 0.51, 0.51, 0.51))
+n=12
+colors = rainbow(n, s = 1, v = 1, start = 0, end = max(1, n - 1)/n, alpha = 1)
+# plot
+Tr_RF <- plot.roc(train_pr$obs, train_pr$M, col=colors[1], lty=1)
+ciobj_Tr_RF <- ci.se(Tr_RF, specificities=seq(0, 1, 0.05)) 
+par(new=TRUE)
+plot(ciobj_Tr_RF, type="shape", col="grey") # plot as a blue shape
+par(new=TRUE)
+Tr_RF <- plot.roc(train_pr$obs, train_pr$M, col=colors[1], lty=1, main="ROC for cvTrain")
+legend("bottomright", 
+       legend = c(paste0("cvTrain: AUC=", formatC(ROCcv_train$auc,digits=2, format="f"))), 
+       col = colors[1],lwd = 2, lty = c(1))
+
+# plot
+val_RF <- plot.roc(val_pr$obs, val_pr$M, col=colors[10], lty=1)
+ciobj_val_RF <- ci.se(val_RF, specificities=seq(0, 1, 0.05)) 
+par(new=TRUE)
+plot(ciobj_val_RF, type="shape", col="grey") # plot as a blue shape
+par(new=TRUE)
+val_RF <- plot.roc(val_pr$obs, val_pr$M, col=colors[10], lty=1, main="ROC for cvValidation")
+legend("bottomright", 
+       legend = c(paste0("cvValidation: AUC=", formatC(val_RF$auc,digits=2, format="f"))), 
+       col = colors[10],lwd = 2, lty = c(1))
+# plot
+Te_RF <- plot.roc(perfinal$testprob$obs, perfinal$testprob$M, col=colors[8], lty=1, main="ROC for held-out Test")
+legend("bottomright", 
+       legend = c(paste0("Test: AUC=", formatC(Te_RF$auc,digits=2, format="f"))), 
+       col = colors[8],lwd = 2, lty = c(1))
+
+```
+
+
+## Adding graph connectivity features 
+```{r echo=TRUE, eval=FALSE, warning=FALSE}
+nxGnorm <- read.csv(file="input/nxGnormfeatures_allNMEs_descStats.csv", header=FALSE, sep=",")
+colnames(nxGnorm) <- paste("nxg", c(1:ncol(nxGnorm)),  sep ="")
+
+# print summary of lesions in dataset:
+onlylab_nxG =  cbind(allfeatures[allfeatures$labels!='K',], nxGnorm[allfeatures$labels!='K',])
+summary(onlylab_nxG$labels)
+
+## Features:
+# 34 Dynamic, 19 morphological, 44 texture, 20 dispersion, 80 single-enhancement
+# + 20 connectivity metric distributions over graphs, x 17 summary statistics
+# --- 
+# 537 Total conventional CAD features + graph features
+
+# split in 90%/10% train/test:
+sep = round(nrow(allfeatures)*0.10)
+test = onlylab_nxG[1:sep,]
+init_indTrain = sep+1
+train = onlylab_nxG[init_indTrain:nrow(onlylab_nxG),]
+
+```
+
+```{r echo=FALSE, eval=TRUE, warning=FALSE}
+setwd("Z:/Cristina/PhD-files/presentations/paper-review_ROC_ROL") 
+load("traditionalCAD_wgraph_perf.RData")
+```
+
+## Ensembles performance surface plots:
+```{r echo=FALSE, eval=TRUE, warning=FALSE, fig.width=10}
+################
+# plot learning surface of ensemble parameters
+surface_forestperfm(grdperf_toplot, 2, "D", "ntrees")
+
+```
+
+## ROC of ensembles with graph features 
+```{r eval=TRUE, echo=FALSE, fig.width=10, fig.height=3.3, warning=FALSE}
+# Create 5 objects: Tr_RF_nxG, ciobj_Tr_RF_nxG, val_RF_nxG, ciobj_val_RF_nxG, Te_RF_nxG
+# plot ROC curve
+################
+library(pROC)
+par(mfrow = c(1, 3))
+par(cex = 0.6)
+par(mar = c(3, 3, 0, 0), oma = c(0.51, 0.51, 0.51, 0.51))
+
+n=12
+colors = rainbow(n, s = 1, v = 1, start = 0, end = max(1, n - 1)/n, alpha = 1)
+# plot
+Tr_RF_nxG  <- plot.roc(train_pr$obs, train_pr$M, col=colors[1], lty=1)
+ciobj_Tr_RF_nxG  <- ci.se(Tr_RF_nxG , specificities=seq(0, 1, 0.05)) 
+par(new=TRUE)
+plot(ciobj_Tr_RF_nxG, type="shape", col="grey") # plot as a blue shape
+par(new=TRUE)
+Tr_MLP_nxG <- plot.roc(train_pr$obs, train_pr$M, col=colors[1], lty=1, main="ROC for RF wxG cvTrain")
+legend("bottomright", 
+       legend = c(paste0("cvTrain: AUC=", formatC(Tr_RF_nxG$auc,digits=2, format="f"))), 
+       col = colors[1],lwd = 2, lty = c(1))
+
+# plot
+val_RF_nxG <- plot.roc(val_pr$obs, val_pr$M, col=colors[10], lty=1)
+ciobj_val_RF_nxG<- ci.se(val_RF_nxG, specificities=seq(0, 1, 0.05)) 
+par(new=TRUE)
+plot(ciobj_val_RF_nxG, type="shape", col="grey") # plot as a blue shape
+par(new=TRUE)
+val_MLP_nxG <- plot.roc(val_pr$obs, val_pr$M, col=colors[10], lty=1, main="ROC for RF wxG cvValidation")
+legend("bottomright", 
+       legend = c(paste0("cvValidation: AUC=", formatC(val_RF_nxG$auc,digits=2, format="f"))), 
+       col = colors[10],lwd = 2, lty = c(1))
+# plot
+Te_RF_nxG  <- plot.roc(perfinal$testprob$obs, perfinal$testprob$M, col=colors[8], lty=1, main="ROC for RF wxG held-out Test")
+legend("bottomright", 
+       legend = c(paste0("Test: AUC=", formatC(Te_RF_nxG $auc,digits=2, format="f"))), 
+       col = colors[8],lwd = 2, lty = c(1))
+
+```
+
+
+## Graph features and Deep Embedding (DEC + MLP)
+```{r echo=FALSE, eval=TRUE, warning=FALSE, fig.width=10}
+################
+setwd("Z:/Cristina/PhD-files/presentations/paper-review_ROC_ROL") # 
+pdZ_grdperf <- read.csv(file="input/pdAUC_Zlatent.csv", header=TRUE, sep=",")
+
+# plot learning surface of ensemble parameters
+# assumes the first two columns are AUCtrain, AUCtest
+surface_forestperfm(pdZ_grdperf, 2, "spaceD_Redx", "num_clusters")
+```
+
+
+## ROC MLP+DEC
+```{r eval=TRUE, echo=FALSE, fig.width=10, fig.height=3.3, warning=FALSE}
+# Create 5 objects: Tr_DECMLP, ciobj_Tr_DECMLP, val_DECMLP, ciobj_val_DECMLP, Te_DECMLP
+# plot ROC curve 
+################
+pdZ_pooled_pred_train <- read.csv(file="input/pooled_pred_train.csv", header=TRUE, sep=",")
+pdZ_pooled_pred_val <- read.csv(file="input/pooled_pred_val.csv", header=TRUE, sep=",")
+pdZ_test <- read.csv(file="input/pdZ_test.csv", header=TRUE, sep=",")
+pdZ_pooled_pred_train$labels = factor(ifelse(pdZ_pooled_pred_train$labels==1,"M","B"))
+pdZ_pooled_pred_val$labels = factor(ifelse(pdZ_pooled_pred_val$labels==1,"M","B"))
+pdZ_test$labels = factor(ifelse(pdZ_test$labels==1,"M","B"))
+
+library(pROC)
+par(mfrow = c(1, 3))
+par(cex = 0.6)
+par(mar = c(3, 3, 0, 0), oma = c(0.51, 0.51, 0.51, 0.51))
+
+n=12
+colors = rainbow(n, s = 1, v = 1, start = 0, end = max(1, n - 1)/n, alpha = 1)
+# plot
+Tr_DECMLP <- plot.roc(pdZ_pooled_pred_train$labels, pdZ_pooled_pred_train$probC, col=colors[1], lty=1)
+ciobj_Tr_MLP <- ci.se(Tr_DECMLP, specificities=seq(0, 1, 0.05)) 
+par(new=TRUE)
+plot(ciobj_Tr_MLP, type="shape", col="grey") # plot as a blue shape
+par(new=TRUE)
+Tr_DECMLP <- plot.roc(pdZ_pooled_pred_train$labels, pdZ_pooled_pred_train$probC, col=colors[1], lty=1, main="ROC for DEC+MLP cvTrain")
+legend("bottomright", 
+       legend = c(paste0("cvTrain: AUC=", formatC(Tr_DECMLP$auc,digits=2, format="f"))), 
+       col = colors[1],lwd = 2, lty = c(1))
+
+# plot
+val_DECMLP <- plot.roc(pdZ_pooled_pred_val$labels, pdZ_pooled_pred_val$probC, col=colors[10], lty=1)
+ciobj_val_DECMLP <- ci.se(val_DECMLP, specificities=seq(0, 1, 0.05)) 
+par(new=TRUE)
+plot(ciobj_val_DECMLP, type="shape", col="grey") # plot as a blue shape
+par(new=TRUE)
+val_DECMLP <- plot.roc(pdZ_pooled_pred_val$labels, pdZ_pooled_pred_val$probC, col=colors[10], lty=1, main="ROC for DEC+MLP cvValidation")
+legend("bottomright", 
+       legend = c(paste0("cvValidation: AUC=", formatC(val_DECMLP$auc,digits=2, format="f"))), 
+       col = colors[10],lwd = 2, lty = c(1))
+
+# plot
+Te_DECMLP <- plot.roc(pdZ_test$labels, pdZ_test$probC, col=colors[8], lty=1, main="ROC for DEC+MLP held-out Test")
+legend("bottomright", 
+       legend = c(paste0("Test: AUC=", formatC(Te_DECMLP$auc,digits=2, format="f"))), 
+       col = colors[8],lwd = 2, lty = c(1))
+
+```
+
+
+## AUC comparison: Boostrap method
+<h1>AUC difference significance testing</h1>
+
+* Computation details:
+a) boot.n (2000) bootstrap replicates are drawn from the data. If boot.stratified = TRUE, each replicate contains exactly the same number of controls and cases than the original sample
+
+b) for each bootstrap replicate, the AUC of the two ROC curves are computed and the difference is used:
+ $$  D =  \frac{AUC_1-AUC_2}{std(AUC_1-AUC_2)} \sim Z$$
+where $std$ is the standard deviation of the bootstrap differences and AUC1 and AUC2 the AUC of the two (bootstrap replicate) ROC curves.
+
+c) Z approximately follows a normal distribution, one or two-tailed p-values can be calculated accordingly.
+
+
+## ROC Comparison: Ensembles of trees
+<div class="column-left13">
+```{r echo=FALSE, eval=TRUE, fig.width=3, fig.height=5.5, warning=FALSE}
+# group1: Tr_RF, ciobj_Tr_RF, val_RF, ciobj_val_RF, Te_RF
+# group 2: Tr_RF_nxG, ciobj_Tr_RF_nxG, val_RF_nxG, ciobj_val_RF_nxG, Te_RF_nxG
+# group 3: Tr_DECMLP, ciobj_Tr_DECMLP, val_DECMLP, ciobj_val_DECMLP, Te_DECMLP
+################
+par(mfrow = c(2,1))
+par(cex = 0.6)
+par(mar = c(3, 3, 0, 0), oma = c(0.78, 0.78, 0.78, 0.78))
+# plot
+n=12
+colors = rainbow(n, s = 1, v = 1, start = 0, end = max(1, n - 1)/n, alpha = 1)
+
+a=plot.roc(Tr_RF, col=colors[1], lty=1)
+par(new=TRUE)
+a=plot(ciobj_Tr_RF, type="shape", col="grey") # plot as a blue shape
+par(new=TRUE)
+a=plot.roc(Tr_RF, col=colors[1], lty=1, main="cvTrain wTraditionalF")
+legend("bottomright", 
+       legend = c(paste0("cvTrain: AUC=", formatC(Tr_RF$auc,digits=2, format="f"))), 
+       col = colors[1],lwd = 2, lty = c(1))
+
+# plot
+a=plot.roc(val_RF, col=colors[10], lty=1)
+par(new=TRUE)
+a=plot(ciobj_val_RF, type="shape", col="grey") # plot as a blue shape
+par(new=TRUE)
+a=plot.roc(val_RF, col=colors[10], lty=1, main="cvVal wTraditionalF")
+legend("bottomright", 
+       legend = c(paste0("cvValidation: AUC=", formatC(val_RF$auc,digits=2, format="f"))), 
+       col = colors[10],lwd = 2, lty = c(1))
+
+```
+</div>
+<div class="column-right23">
+```{r}
+# Do we significantly overtrain?
+roc.test(Tr_RF,val_RF,method="bootstrap",boot.stratified=TRUE, alternative="greater")
+
+#  compare the two ROC curves (DeLong) based on U-statistics theory
+roc.test(Tr_RF,val_RF,method="delong",alternative="greater")
+```
+</div>
+
+## Ensembles of trees with graph features
+<div class="column-left13">
+```{r echo=FALSE, eval=TRUE, fig.width=3, fig.height=5.5, warning=FALSE}
+# group1: Tr_RF, ciobj_Tr_RF, val_RF, ciobj_val_RF, Te_RF
+# group 2: Tr_RF_nxG, ciobj_Tr_RF_nxG, val_RF_nxG, ciobj_val_RF_nxG, Te_RF_nxG
+# group 3: Tr_DECMLP, ciobj_Tr_DECMLP, val_DECMLP, ciobj_val_DECMLP, Te_DECMLP
+################
+par(mfrow = c(2,1))
+par(cex = 0.6)
+par(mar = c(3, 3, 0, 0), oma = c(0.78, 0.78, 0.78, 0.78))
+# plot
+n=12
+colors = rainbow(n, s = 1, v = 1, start = 0, end = max(1, n - 1)/n, alpha = 1)
+
+a=plot.roc(Tr_RF_nxG, col=colors[1], lty=1)
+par(new=TRUE)
+a=plot(ciobj_Tr_RF_nxG, type="shape", col="grey") # plot as a blue shape
+par(new=TRUE)
+a=plot.roc(Tr_RF_nxG, col=colors[1], lty=1, main="cvTrain wgraphF")
+legend("bottomright", 
+       legend = c(paste0("cvTrain: AUC=", formatC(Tr_RF_nxG$auc,digits=2, format="f"))), 
+       col = colors[1],lwd = 2, lty = c(1))
+
+# plot
+a=plot.roc(val_RF_nxG, col=colors[10], lty=1)
+par(new=TRUE)
+a=plot(ciobj_val_RF_nxG, type="shape", col="grey") # plot as a blue shape
+par(new=TRUE)
+a=plot.roc(val_RF_nxG, col=colors[10], lty=1, main="cvVal wgraphF")
+legend("bottomright", 
+       legend = c(paste0("cvValidation: AUC=", formatC(val_RF_nxG$auc,digits=2, format="f"))), 
+       col = colors[10],lwd = 2, lty = c(1))
+
+```
+</div>
+<div class="column-right23">
+```{r}
+# Do we significantly overtrain with graph features too?
+roc.test(Tr_RF_nxG,val_RF_nxG,method="bootstrap",boot.stratified=TRUE, alternative="greater")
+#  compare the two ROC curves (DeLong) based on U-statistics theory 
+roc.test(Tr_RF_nxG,val_RF_nxG,method="delong",alternative="greater")
+```
+</div>
+
+## Embedding statistically improve performance?
+<div class="column-left13">
+```{r echo=FALSE, eval=TRUE, fig.width=3, fig.height=5.5, warning=FALSE}
+# group1: Tr_RF, ciobj_Tr_RF, val_RF, ciobj_val_RF, Te_RF
+# group 2: Tr_RF_nxG, ciobj_Tr_RF_nxG, val_RF_nxG, ciobj_val_RF_nxG, Te_RF_nxG
+# group 3: Tr_DECMLP, ciobj_Tr_DECMLP, val_DECMLP, ciobj_val_DECMLP, Te_DECMLP
+################
+par(mfrow = c(2,1))
+par(cex = 0.6)
+par(mar = c(3, 3, 0, 0), oma = c(0.78, 0.78, 0.78, 0.78))
+# plot
+n=12
+colors = rainbow(n, s = 1, v = 1, start = 0, end = max(1, n - 1)/n, alpha = 1)
+
+a=plot.roc(val_RF_nxG, col=colors[1], lty=1)
+par(new=TRUE)
+a=plot(ciobj_val_RF_nxG, type="shape", col="grey") # plot as a blue shape
+par(new=TRUE)
+a=plot.roc(val_RF_nxG, col=colors[1], lty=1, main="cvVal RF wgraphF")
+legend("bottomright", 
+       legend = c(paste0("cvValidation: AUC=", formatC(val_RF_nxG$auc,digits=2, format="f"))), 
+       col = colors[1],lwd = 2, lty = c(1))
+# plot
+a=plot.roc(val_DECMLP, col=colors[10], lty=1)
+par(new=TRUE)
+a=plot(ciobj_val_DECMLP, type="shape", col="grey") # plot as a blue shape
+par(new=TRUE)
+a=plot.roc(val_DECMLP, col=colors[10], lty=1, main="cvVal DEC+MLP")
+legend("bottomright", 
+       legend = c(paste0("cvValidation: AUC=", formatC(val_DECMLP$auc,digits=2, format="f"))), 
+       col = colors[10],lwd = 2, lty = c(1))
+
+```
+</div>
+<div class="column-right23">
+```{r}
+# Do we significantly overtrain with graph features too?
+roc.test(val_DECMLP,val_RF_nxG,method="bootstrap",boot.stratified=TRUE,alternative="greater")
+
+#  compare the two ROC curves (DeLong) based on U-statistics theory 
+roc.test(val_DECMLP,val_RF_nxG,method="delong",alternative="greater")
+```
+</div>
+
+## Performance on indep. held-out set?
+<div class="column-left13">
+```{r echo=FALSE, eval=TRUE, fig.width=3, fig.height=5.5, warning=FALSE}
+# group1: Tr_RF, ciobj_Tr_RF, val_RF, ciobj_val_RF, Te_RF
+# group 2: Tr_RF_nxG, ciobj_Tr_RF_nxG, val_RF_nxG, ciobj_val_RF_nxG, Te_RF_nxG
+# group 3: Tr_DECMLP, ciobj_Tr_DECMLP, val_DECMLP, ciobj_val_DECMLP, Te_DECMLP
+################
+par(mfrow = c(2,1))
+par(cex = 0.6)
+par(mar = c(3, 3, 0, 0), oma = c(0.78, 0.78, 0.78, 0.78))
+# plot
+n=12
+colors = rainbow(n, s = 1, v = 1, start = 0, end = max(1, n - 1)/n, alpha = 1)
+
+a=plot.roc(Te_RF_nxG, col=colors[2], lty=1, main="Test RF wgraphF")
+legend("bottomright", 
+       legend = c(paste0("Test: AUC=", formatC(Te_RF_nxG$auc,digits=2, format="f"))), 
+       col = colors[2],lwd = 2, lty = c(1))
+
+# plot
+a=plot.roc(Te_DECMLP, col=colors[11], lty=1, main="Test DEC+MLP")
+legend("bottomright", 
+       legend = c(paste0("Test: AUC=", formatC(Te_DECMLP$auc,digits=2, format="f"))), 
+       col = colors[11],lwd = 2, lty = c(1))
+
+```
+</div>
+<div class="column-right23">
+```{r}
+#  compare the two ROC curves * same datasets (correlated):
+roc.test(Te_RF_nxG,Te_DECMLP,method="bootstrap",boot.stratified=TRUE,alternative="less")
+
+#  compare the two ROC curves (DeLong) based on U-statistics theory
+roc.test(Te_RF_nxG,Te_DECMLP,paired=TRUE,method="delong",alternative="less")
+```
+</div>
+
+## Conclusions
+* The ROC and ROL areas can be interpreted as re-parametrized forms of the
+Mann-Whitney U-statistic 
+* Because the Mann-WhitneyU-distribution can be specified exactly, this distribution can be used to calculate the statistical significance of the ROC and ROL areas, and
+gives results that are equivalent to a permutation test.
+* A normal approximation provides an accurate estimate of the significance of the Areas given large samples
+* Areas can be compared using a test based on the t-test or the paired t-test
+
